@@ -1,0 +1,14 @@
+{
+  "name": "locking-cache",
+  "version": "0.1.0",
+  "description": "A locking LRU cache",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mojodna/node-locking-cache.git"
+  },
+  "author": "Seth Fitzsimmons <seth@mojodna.net>",
+  "license": "BSD-2-Clause",
+  "dependencies": {
+    "lru-cache": "~2.3.1"
+  }
+}
