@@ -8,9 +8,15 @@ module.exports = function(options) {
 
   return function locked(fn) {
     return function() {
-      var args = Array.prototype.slice.call(arguments, 0),
-          // extract the eventual callback
-          callback = args.pop();
+      var args = Array.prototype.slice.call(arguments, 0);
+
+      // extract the eventual callback, defaulting to a noop if none was
+      // provided
+      var callback = function() {};
+
+      if (typeof args[args.length - 1] === "function") {
+        callback = args.pop();
+      }
 
       // replace the callback with a lock function
       args.push(function lock(key, generator) {
