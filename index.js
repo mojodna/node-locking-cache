@@ -20,6 +20,10 @@ module.exports = function(options) {
 
       // replace the callback with a lock function
       args.push(function lock(key, generator) {
+        if (typeof(key) === 'object') {
+          key = JSON.stringify(key);
+        }
+
         var data;
         if ((data = cache.get(key))) {
           // cache hit!
