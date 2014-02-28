@@ -2,9 +2,11 @@
 
 var LRU = require("lru-cache");
 
-module.exports = function(options) {
-  var locks = LRU(),
-      cache = LRU(options);
+module.exports = function(LRUConf) {
+  var locks = LRU(), cache;
+
+  if (typeof LRUConf === "function") cache = LRUConf();
+  else cache = LRU(LRUConf);
 
   return function locked(fn) {
     return function() {
