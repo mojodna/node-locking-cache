@@ -49,3 +49,24 @@ fetch("http://google.com/", function(err, rsp, body) {
 ```
 
 See [`lru-cache`](https://github.com/isaacs/node-lru-cache) for cache options.
+
+A custom factory function (that returns an `LRU` instance or compatible) may be
+provided as the last argument. Here are 2 examples of how it can be used.
+
+```javascript
+var lockingCache = require("locking-cache"),
+    lockedFetchA = lockingCache(function() {
+      return LRU({
+        max: 10
+      });
+    }),
+    lockedFetchB = lockingCache({
+      name: "B",
+      max: 10
+    }, function(options) {
+      console.log("Creating cache for %s", options.name);
+      return LRU(options);
+    });
+
+// ...
+```

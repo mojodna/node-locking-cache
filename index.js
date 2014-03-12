@@ -3,16 +3,20 @@
 var LRU = require("lru-cache");
 
 module.exports = function(options) {
-  var cacheFactory = options;
+  var cacheFactory = arguments[arguments.length - 1];
+
+  if (typeof options === "function") {
+    options = {};
+  }
 
   if (typeof cacheFactory !== "function") {
-    cacheFactory = function() {
-      return LRU(options);
+    cacheFactory = function(opts) {
+      return LRU(opts);
     };
   }
 
   var locks = LRU(),
-      cache = cacheFactory();
+      cache = cacheFactory(options);
 
   return function locked(fn) {
     return function() {
