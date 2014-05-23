@@ -50,6 +50,17 @@ fetch("http://google.com/", function(err, rsp, body) {
 
 See [`lru-cache`](https://github.com/isaacs/node-lru-cache) for cache options.
 
+The `dispose` option that's passed to the underlying LRU differs slightly from
+what `lru-cache` documents, as values are stored as arrays in order to support
+varargs (multiple values passed to `unlock()`):
+
+```javascript
+var lockedFetch = lockingCache({
+  dispose: function(key, values) {
+    // ...
+  });
+```
+
 A custom factory function (that returns an `LRU` instance or compatible) may be
 provided as the last argument. Here are 2 examples of how it can be used.
 
