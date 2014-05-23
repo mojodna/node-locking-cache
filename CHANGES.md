@@ -1,6 +1,11 @@
 # Change Log
 
-## v0.1.3 5/27/13
+## v0.2.0 5/22/14
+
+* Provide a context to generator functions (contains `callback`, since it's not
+  passed as an argument)
+
+## v0.1.3 5/22/14
 
 * Upgrade `lru-cache` to 2.5.0
 * Attach `locks` and `cache` to the locking function for visibility

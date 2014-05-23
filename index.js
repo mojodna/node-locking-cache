@@ -77,8 +77,12 @@ module.exports = function(options) {
         });
       });
 
+      var context = {
+        callback: callback
+      };
+
       // call the wrapped function with updated arguments
-      return fn.apply(null, args);
+      return fn.apply(context, args);
     };
   };
 
