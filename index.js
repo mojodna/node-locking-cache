@@ -18,7 +18,7 @@ module.exports = function(options) {
   var locks = LRU(),
       cache = cacheFactory(options);
 
-  return function locked(fn) {
+  var fn = function locked(fn) {
     return function() {
       var args = Array.prototype.slice.call(arguments, 0);
 
@@ -81,4 +81,9 @@ module.exports = function(options) {
       return fn.apply(null, args);
     };
   };
+
+  fn.locks = locks;
+  fn.cache = cache;
+
+  return fn;
 };
