@@ -69,7 +69,7 @@ module.exports = function(options) {
           }
 
           // pass generated data to all waiting callbacks
-          waiting.forEach(function(cb) {
+          (waiting || []).forEach(function(cb) {
             return setImmediate(function() {
               return cb.apply(null, args);
             });

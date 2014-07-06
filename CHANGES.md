@@ -1,4 +1,8 @@
-# Change Log
+# Changes
+
+## v0.2.1 7/5/14
+
+* Don't crash when nothing is waiting
 
 ## v0.2.0 5/22/14
 
