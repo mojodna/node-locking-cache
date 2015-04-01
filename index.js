@@ -18,7 +18,7 @@ module.exports = function(options) {
   var locks = LRU(),
       cache = cacheFactory(options);
 
-  var fn = function locked(fn) {
+  var wrapped = function locked(fn) {
     return function() {
       var args = Array.prototype.slice.call(arguments, 0);
 
@@ -32,7 +32,7 @@ module.exports = function(options) {
 
       // replace the callback with a lock function
       args.push(function lock(key, generator) {
-        if (typeof(key) === 'object') {
+        if (typeof key === "object") {
           key = JSON.stringify(key);
         }
 
@@ -55,10 +55,9 @@ module.exports = function(options) {
         locks.set(key, [callback]);
 
         return generator(function unlock(err) {
+          var waiting = locks.get(key) || [];
           args = Array.prototype.slice.call(arguments, 0);
-
-          var data = args.slice(1),
-              waiting = locks.get(key);
+          data = args.slice(1);
 
           // clear the lock now that we've got a list of pending callbacks
           locks.del(key);
@@ -69,7 +68,7 @@ module.exports = function(options) {
           }
 
           // pass generated data to all waiting callbacks
-          (waiting || []).forEach(function(cb) {
+          waiting.forEach(function(cb) {
             return setImmediate(function() {
               return cb.apply(null, args);
             });
@@ -86,8 +85,8 @@ module.exports = function(options) {
     };
   };
 
-  fn.locks = locks;
-  fn.cache = cache;
+  wrapped.locks = locks;
+  wrapped.cache = cache;
 
-  return fn;
+  return wrapped;
 };
