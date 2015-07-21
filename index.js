@@ -46,7 +46,7 @@ module.exports = function(options) {
 
         var callbacks;
         if ((callbacks = locks.get(key))) {
-          // already cached
+          // already locked
           callbacks.push(callback);
           locks.set(key, callbacks);
           return;
