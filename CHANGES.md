@@ -1,5 +1,9 @@
 # Changes
 
+## v0.3.0 7/8/16
+
+* Upgrade `lru-cache` (for `cache.set(key, val, ttl)`)
+
 ## v0.2.1 7/5/14
 
 * Don't crash when nothing is waiting
