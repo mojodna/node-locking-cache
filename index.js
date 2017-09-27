@@ -39,9 +39,7 @@ module.exports = function(options) {
         if (cache.has(key)) {
           var data = cache.get(key);
           // cache hit!
-          return setImmediate(function() {
-            return callback.apply(null, [null].concat(data));
-          });
+          return setImmediate(callback, [null].concat(data));
         }
 
         var callbacks;
@@ -69,9 +67,7 @@ module.exports = function(options) {
 
           // pass generated data to all waiting callbacks
           waiting.forEach(function(cb) {
-            return setImmediate(function() {
-              return cb.apply(null, args);
-            });
+            return setImmediate(cb, args);
           });
         });
       });
