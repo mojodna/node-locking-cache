@@ -1,5 +1,10 @@
 # Changes
 
+## v0.4.0 9/27/17
+
+* Return stale entries (and invoke the generator) when `lru-cache` is configured
+  with `stale: true`
+
 ## v0.3.0 7/8/16
 
 * Upgrade `lru-cache` (for `cache.set(key, val, ttl)`)

@@ -26,6 +26,7 @@ module.exports = function(options) {
       // provided
       var callback = function() {};
 
+      // extract the callback from passed args
       if (typeof args[args.length - 1] === "function") {
         callback = args.pop();
       }
@@ -36,21 +37,43 @@ module.exports = function(options) {
           key = JSON.stringify(key);
         }
 
-        if (cache.has(key)) {
-          var data = cache.get(key);
-          // cache hit!
-          return setImmediate(callback, [null].concat(data));
+        var data;
+        var stale = false;
+        if (!cache.has(key) && (data = cache.get(key)) != null) {
+          // stale hit; return data but still invoke the generator below
+          stale = true;
+          setImmediate(callback, [null].concat(data));
+
+          // reset callback since we just called it
+          callback = null;
         }
 
-        var callbacks;
-        if ((callbacks = locks.get(key))) {
+        if (cache.has(key)) {
+          // cache hit!
+          return setImmediate(callback, [null].concat(cache.get(key)));
+        }
+
+        if (locks.has(key)) {
           // already locked
-          callbacks.push(callback);
-          locks.set(key, callbacks);
+
+          if (callback != null) {
+            var callbacks = locks.get(key);
+            callbacks.push(callback);
+            locks.set(key, callbacks);
+          }
+
           return;
         }
 
-        locks.set(key, [callback]);
+        if (stale) {
+          // populate the cache temporarily for subsequent requests (it will be
+          // overwritten shortly by the generating function)
+          cache.set(key, data);
+        }
+
+        locks.set(key, [callback].filter(function(x) {
+          return x != null;
+        }));
 
         return generator(function unlock(err) {
           var waiting = locks.get(key) || [];
