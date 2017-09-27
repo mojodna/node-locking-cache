@@ -36,8 +36,8 @@ module.exports = function(options) {
           key = JSON.stringify(key);
         }
 
-        var data;
-        if ((data = cache.get(key))) {
+        if (cache.has(key)) {
+          var data = cache.get(key);
           // cache hit!
           return setImmediate(function() {
             return callback.apply(null, [null].concat(data));
