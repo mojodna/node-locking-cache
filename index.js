@@ -42,7 +42,11 @@ module.exports = function(options) {
         if (!cache.has(key) && (data = cache.get(key)) != null) {
           // stale hit; return data but still invoke the generator below
           stale = true;
-          setImmediate(callback, [null].concat(data));
+
+          var cb = callback;
+          setImmediate(function() {
+            return cb.apply(null, [null].concat(data));
+          });
 
           // reset callback since we just called it
           callback = null;
@@ -50,7 +54,9 @@ module.exports = function(options) {
 
         if (cache.has(key)) {
           // cache hit!
-          return setImmediate(callback, [null].concat(cache.get(key)));
+          return setImmediate(function() {
+            return callback.apply(null, [null].concat(cache.get(key)));
+          });
         }
 
         if (locks.has(key)) {
@@ -90,7 +96,9 @@ module.exports = function(options) {
 
           // pass generated data to all waiting callbacks
           waiting.forEach(function(cb) {
-            return setImmediate(cb, args);
+            return setImmediate(function() {
+              return cb.apply(null, args);
+            });
           });
         });
       });

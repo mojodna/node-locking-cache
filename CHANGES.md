@@ -1,5 +1,9 @@
 # Changes
 
+## v0.4.1 9/27/17
+
+* Fix callback argument count and shape
+
 ## v0.4.0 9/27/17
 
 * Return stale entries (and invoke the generator) when `lru-cache` is configured
